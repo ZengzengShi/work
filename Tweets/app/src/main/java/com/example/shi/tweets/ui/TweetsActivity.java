@@ -1,4 +1,4 @@
-package com.example.shi.tweets;
+package com.example.shi.tweets.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.shi.tweets.R;
 
 public class TweetsActivity extends AppCompatActivity {
 
