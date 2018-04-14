@@ -16,6 +16,8 @@ import java.util.ArrayList;
  */
 public class TweetsActivityFragment extends Fragment implements UiContract.ItweetsView{
 
+    private UiContract.ItweetsPresenter mPresenter;
+
     public TweetsActivityFragment() {
     }
 
@@ -26,8 +28,15 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
     }
 
     @Override
-    public void setPresence(UiContract.ItweetsPresenter presence) {
+    public void onResume() {
 
+        super.onResume();
+        mPresenter.start();
+    }
+
+    @Override
+    public void setPresence(UiContract.ItweetsPresenter presence) {
+        mPresenter = presence;
     }
 
     @Override

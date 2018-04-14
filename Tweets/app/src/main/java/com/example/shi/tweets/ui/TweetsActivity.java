@@ -1,6 +1,7 @@
 package com.example.shi.tweets.ui;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.shi.tweets.Injection;
 import com.example.shi.tweets.R;
 
 public class TweetsActivity extends AppCompatActivity {
+    private TweetsPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,15 @@ public class TweetsActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        TweetsActivityFragment mFragment = (TweetsActivityFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment);
+
+        mPresenter = new TweetsPresenter(Injection.providerUseCaseHandler(),
+                Injection.providerRepository(),
+                Injection.providerGetTweetsUseCase(),
+                mFragment
+                );
     }
 
     @Override
@@ -50,5 +62,10 @@ public class TweetsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @VisibleForTesting
+    public TweetsPresenter getmPresenter(){
+        return mPresenter;
     }
 }
