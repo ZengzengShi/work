@@ -1,5 +1,8 @@
 package com.example.shi.tweets.data;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.shi.tweets.entities.Tweet;
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,6 +99,48 @@ public class RemoteDataSource implements DateSource{
         });
 
     }
+
+    @Override
+    public void loadImage(@NonNull final String url, @NonNull final LoadImageCallBack callBack) {
+        mAppExecutor.getNetworkExcutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Call<ResponseBody> call = mTweetsClient.downLoadImage(url);
+                Log.e(TAG, "request = " + call.request().toString());
+
+                final Executor mainExecutor = mAppExecutor.getMainExecutor();
+                call.enqueue(new Callback<ResponseBody>(){
+
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        final Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                        //call.request().body().
+                        mainExecutor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                callBack.onLoaded(new ImageResponse(bitmap, "test"));
+                            }
+                        });
+                    }
+
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        final String errMsg = t.toString();
+                        mainExecutor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                callBack.onFail(errMsg);
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+    }
+
+
 
     private void outputTweets(ArrayList<Tweet> tweets){
         if(tweets == null){
