@@ -53,7 +53,7 @@ public abstract class UseCase<R extends UseCase.RequestValues, P extends UseCase
 
         void onSuccess(P response);
 
-        void onError();
+        void onError(String errorMsg);
 
     }
 }

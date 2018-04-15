@@ -43,4 +43,9 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
     public void updataTweets(ArrayList<Tweet> tweets) {
 
     }
+
+    @Override
+    public void showErrorMsg(String errorMsg) {
+
+    }
 }

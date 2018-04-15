@@ -1,5 +1,6 @@
 package com.example.shi.tweets.usecase;
 
+import com.example.shi.tweets.data.DateSource;
 import com.example.shi.tweets.data.TweetsRepository;
 import com.example.shi.tweets.entities.Tweet;
 
@@ -20,10 +21,30 @@ public class GetTweets extends UseCase <GetTweets.GetTweetsRequest, GetTweets.Ge
 
     @Override
     protected void executeUseCase(GetTweetsRequest requestValues) {
+        mRepository.getTweets(requestValues.getUserName(), new DateSource.LoadCallBack() {
+            @Override
+            public void onLoaded(ArrayList<Tweet> tweets) {
+                getUseCaseCallback().onSuccess(new GetTweetsResponse(tweets));
+            }
+
+            @Override
+            public void onFail(String reason) {
+                getUseCaseCallback().onError(reason);
+            }
+        });
 
     }
 
     public static final class GetTweetsRequest implements UseCase.RequestValues{
+        private String userName;
+
+        public String getUserName(){
+            return userName;
+        }
+
+        public void setUserName(String name){
+            userName = name;
+        }
 
     }
 

@@ -54,7 +54,7 @@ public class UseCaseScheduler {
 
             @Override
             public void run() {
-                useCaseCallback.onError();
+                useCaseCallback.onError("error");
             }
         });
     }

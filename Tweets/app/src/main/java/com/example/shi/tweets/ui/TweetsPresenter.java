@@ -35,6 +35,22 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
     @Override
     public void loadAllTweets() {
 
+        GetTweets.GetTweetsRequest request = new GetTweets.GetTweetsRequest();
+        request.setUserName("jsmith");
+        mUseCaseHandler.execute(mGetTweetsUseCase, request, new UseCase.UseCaseCallback<GetTweets.GetTweetsResponse>() {
+            @Override
+            public void onSuccess(GetTweets.GetTweetsResponse response) {
+                mView.updataTweets(response.getResponse());
+            }
+
+            @Override
+            public void onError(String errorMsg) {
+                mView.showErrorMsg(errorMsg);
+
+            }
+
+        });
+
     }
 
     @Override

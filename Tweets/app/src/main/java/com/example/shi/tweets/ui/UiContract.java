@@ -12,6 +12,7 @@ public interface UiContract {
 
     interface ItweetsView extends BaseView<ItweetsPresenter>{
         public void updataTweets(ArrayList<Tweet> tweets);
+        public void showErrorMsg(String errorMsg);
 
     }
 
