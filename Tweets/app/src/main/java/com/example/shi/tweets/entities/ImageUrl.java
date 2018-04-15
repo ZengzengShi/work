@@ -8,8 +8,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class ImageUrl {
 
+    public ImageUrl(String url){
+        mUrl = url;
+    }
+
     @SerializedName("url")
     String mUrl;
+
+
+    public String getStrUrl(){
+        return mUrl;
+    }
 
     @Override
     public String toString(){

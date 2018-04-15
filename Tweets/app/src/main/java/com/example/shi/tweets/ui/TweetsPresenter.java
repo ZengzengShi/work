@@ -1,9 +1,13 @@
 package com.example.shi.tweets.ui;
 
 import com.example.shi.tweets.data.TweetsRepository;
+import com.example.shi.tweets.entities.Tweet;
+import com.example.shi.tweets.filter.FilterFactory;
 import com.example.shi.tweets.usecase.GetTweets;
 import com.example.shi.tweets.usecase.UseCase;
 import com.example.shi.tweets.usecase.UseCaseHandler;
+
+import java.util.ArrayList;
 
 /**
  * Created by shi on 2018/4/14.
@@ -40,7 +44,10 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
         mUseCaseHandler.execute(mGetTweetsUseCase, request, new UseCase.UseCaseCallback<GetTweets.GetTweetsResponse>() {
             @Override
             public void onSuccess(GetTweets.GetTweetsResponse response) {
-                mView.updataTweets(response.getResponse());
+                ArrayList<Tweet> filtedTweets =
+                        FilterFactory.getFilter(
+                                FilterFactory.VALIDE_TWEETS_FILTER).filter(response.getResponse());
+                mView.updataTweets(filtedTweets);
             }
 
             @Override

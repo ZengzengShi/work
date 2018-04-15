@@ -48,6 +48,10 @@ public class Tweet {
         return mComments;
     }
 
+    public ArrayList<ImageUrl> getImagesUrl(){
+        return mImagesUrl;
+    }
+
     @Override
     public String toString(){
         StringBuffer stringBuffer = new StringBuffer();
