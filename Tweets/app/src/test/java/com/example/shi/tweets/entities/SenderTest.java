@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class SenderTest {
     @Test
     public void testConstructor(){
-        Sender sender = new Sender();
+        Sender sender = new Sender("name", "nick", "avatar");
         assertNotNull(sender);
     }
 }

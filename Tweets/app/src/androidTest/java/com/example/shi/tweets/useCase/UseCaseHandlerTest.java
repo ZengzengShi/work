@@ -50,7 +50,7 @@ public class UseCaseHandlerTest extends InstrumentationTestCase {
             }
 
             @Override
-            public void onError() {
+            public void onError(String errorMsg) {
 
             }
         });

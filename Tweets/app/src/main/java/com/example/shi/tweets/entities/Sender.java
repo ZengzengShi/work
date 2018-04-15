@@ -17,7 +17,15 @@ public class Sender {
     @SerializedName("nick")
     private String mNick;
 
-    public Sender(){}
+    public Sender(String name, String nick, String avatar){
+        mName = name;
+        mNick = nick;
+        mAvatar = avatar;
+    }
+
+    public String getName(){
+        return mName;
+    }
 
     @Override
     public String toString(){

@@ -13,7 +13,7 @@ import retrofit2.http.Path;
  */
 
 public interface TweetsClient {
-    @GET("/users/{user}/tweets")
+    @GET("/user/{user}/tweets")
     Call<ArrayList<Tweet>> getTweets(
             @Path("user") String user
     );

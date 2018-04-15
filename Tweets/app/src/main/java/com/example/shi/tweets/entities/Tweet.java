@@ -13,7 +13,7 @@ public class Tweet {
     private String mContent;
 
     @SerializedName("images")
-    private String [] mImagesUrl;
+    private ArrayList<ImageUrl> mImagesUrl;
 
     @SerializedName("sender")
     private Sender mSender;
@@ -21,13 +21,41 @@ public class Tweet {
     @SerializedName("comments")
     private ArrayList<Comment> mComments;
 
-    public Tweet(){}
+    @SerializedName("error")
+    private String errorMsg;
+
+    public Tweet(String content,
+                 ArrayList<ImageUrl> images,
+                 Sender sender, ArrayList<Comment> comments){
+        mSender = sender;
+        mContent = content;
+        mComments = comments;
+        mImagesUrl = images;
+    }
+
+    public String getSenderName(){
+        if(mSender != null) {
+            return mSender.getName();
+        }
+        return null;
+    }
+
+    public String getContent(){
+        return mContent;
+    }
+
+    public ArrayList<Comment> getComments(){
+        return mComments;
+    }
 
     @Override
     public String toString(){
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("content: " +  mContent);
-        stringBuffer.append("sender: " + mSender.toString());
+        if(mSender != null) {
+            stringBuffer.append("sender: " + mSender.toString());
+        }
+        stringBuffer.append("error: " + errorMsg);
         return stringBuffer.toString();
     }
 }
