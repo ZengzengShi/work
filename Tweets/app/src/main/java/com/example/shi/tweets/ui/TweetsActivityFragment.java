@@ -79,6 +79,7 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
     }
 
     void showTweets(ArrayList<Tweet> tweets){
+        mTweetsContainer.removeAllViews();
         for(Tweet tweet: tweets){
             mTweetsContainer.addView(bindView(tweet));
         }
