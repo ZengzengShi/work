@@ -2,6 +2,7 @@ package com.example.shi.tweets;
 
 import com.example.shi.tweets.data.TweetsRepository;
 import com.example.shi.tweets.usecase.GetTweets;
+import com.example.shi.tweets.usecase.LoadImage;
 import com.example.shi.tweets.usecase.UseCaseHandler;
 
 /**
@@ -19,4 +20,8 @@ public class Injection {
     public static GetTweets providerGetTweetsUseCase(){
         return new GetTweets(providerRepository());
     };
+
+    public static LoadImage providerLoadImageUseCase(){
+        return new LoadImage(providerRepository());
+    }
 }

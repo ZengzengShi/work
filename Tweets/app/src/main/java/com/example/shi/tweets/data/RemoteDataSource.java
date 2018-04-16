@@ -114,11 +114,12 @@ public class RemoteDataSource implements DateSource{
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         final Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-                        //call.request().body().
+                        final String url = call.request().url().toString();
+                        Log.e(TAG, "url = " + url);
                         mainExecutor.execute(new Runnable() {
                             @Override
                             public void run() {
-                                callBack.onLoaded(new ImageResponse(bitmap, "test"));
+                                callBack.onLoaded(new ImageResponse(bitmap, url));
                             }
                         });
                     }

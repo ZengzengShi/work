@@ -38,6 +38,7 @@ public class TweetsActivity extends AppCompatActivity {
         mPresenter = new TweetsPresenter(Injection.providerUseCaseHandler(),
                 Injection.providerRepository(),
                 Injection.providerGetTweetsUseCase(),
+                Injection.providerLoadImageUseCase(),
                 mFragment
                 );
     }

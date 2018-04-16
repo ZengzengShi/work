@@ -4,6 +4,7 @@ import com.example.shi.tweets.data.TweetsRepository;
 import com.example.shi.tweets.entities.Tweet;
 import com.example.shi.tweets.filter.FilterFactory;
 import com.example.shi.tweets.usecase.GetTweets;
+import com.example.shi.tweets.usecase.LoadImage;
 import com.example.shi.tweets.usecase.UseCase;
 import com.example.shi.tweets.usecase.UseCaseHandler;
 
@@ -18,14 +19,16 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
     private UseCaseHandler mUseCaseHandler;
     private TweetsRepository mRepository;
     private GetTweets mGetTweetsUseCase;
+    private LoadImage mLoadImageUserCase;
     private UiContract.ItweetsView mView;
 
     public TweetsPresenter(UseCaseHandler handler, TweetsRepository repository,
-                           GetTweets getTweets, UiContract.ItweetsView view){
+                           GetTweets getTweets, LoadImage loadImage, UiContract.ItweetsView view){
 
         mUseCaseHandler = handler;
         mRepository = repository;
         mGetTweetsUseCase = getTweets;
+        mLoadImageUserCase = loadImage;
         mView = view;
 
         mView.setPresence(this);

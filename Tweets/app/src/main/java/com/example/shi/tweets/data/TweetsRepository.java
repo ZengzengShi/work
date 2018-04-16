@@ -53,7 +53,7 @@ public class TweetsRepository implements DateSource {
 
     @Override
     public void loadImage(@NonNull String url, @NonNull final LoadImageCallBack callBack) {
-        if(isFileExist(url)){
+        if(mLocalDateSource.isFileExist(url)){
             mLocalDateSource.loadImage(url, callBack);
         }else{
             mRemoteDateSource.loadImage(url, new LoadImageCallBack() {
@@ -62,12 +62,7 @@ public class TweetsRepository implements DateSource {
                     final Bitmap bitmap = response.getImage();
                     final String url = response.getUrl();
                     callBack.onLoaded(response);
-                    AppExecutor.getInstance().getmIOExecutor().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            sameImage(url, bitmap);
-                        }
-                    });
+                    mLocalDateSource.saveImage(url, bitmap);
                 }
 
                 @Override
@@ -77,45 +72,5 @@ public class TweetsRepository implements DateSource {
             });
         }
 
-    }
-
-    private boolean isFileExist(String url){
-        String strFile = getPath() + getFilenameForKey(url);
-        try {
-            File f=new File(strFile);
-            if(!f.exists()) {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    private void sameImage(String url, Bitmap bitmap){
-        String dir = getPath();
-        String fileName = getFilenameForKey(url);
-        try {
-            File file = new File(dir + fileName + ".jpg");
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private String getPath(){
-        String dir = Environment.getDataDirectory().getAbsolutePath() + "/tweets/image/";
-        return dir;
-    }
-
-    private String getFilenameForKey(String key) {
-        int firstHalfLength = key.length() / 2;
-        String localFilename = String.valueOf(key.substring(0, firstHalfLength).hashCode());
-        localFilename += String.valueOf(key.substring(firstHalfLength).hashCode());
-        return localFilename;
     }
 }
