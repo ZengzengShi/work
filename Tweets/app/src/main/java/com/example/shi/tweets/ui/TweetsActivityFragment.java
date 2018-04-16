@@ -6,15 +6,22 @@ import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.shi.tweets.R;
 import com.example.shi.tweets.entities.Comment;
+import com.example.shi.tweets.entities.ImageUrl;
 import com.example.shi.tweets.entities.Tweet;
 
 import java.util.ArrayList;
@@ -28,6 +35,7 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
 
     private TextView mEmptyView;
 
+    private SwipeRefreshLayout mSwipeView;
     private LinearLayout mTweetsContainer;
     private LayoutInflater mInflater;
 
@@ -43,6 +51,15 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
         mInflater = inflater;
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
         mTweetsContainer = (LinearLayout) rootView.findViewById(R.id.tweet_container);
+        mSwipeView = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_view);
+        mSwipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.loadAllTweets();
+                mSwipeView.setRefreshing(false);
+            }
+        });
+
         return rootView;
     }
 
@@ -94,6 +111,11 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
         TextView name = (TextView) view.findViewById(R.id.name);
         name.setText(tweet.getSenderName());
 
+        if(tweet.getImagesUrl() != null) {
+            GridView imagesView = (GridView) view.findViewById(R.id.images);
+            imagesView.setAdapter(new ImageAdapter(getContext(), tweet.getImagesUrl()));
+        }
+
         TextView content = (TextView) view.findViewById(R.id.content);
         content.setText(tweet.getContent());
 
@@ -121,5 +143,50 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
             }
         }
         return view;
+    }
+
+    class ImageAdapter extends BaseAdapter{
+
+        private Context mContext;
+        private ArrayList<ImageUrl> mUrls;
+
+        public ImageAdapter(Context context, ArrayList<ImageUrl> urls){
+            super();
+            mContext = context;
+            mUrls = urls;
+        }
+
+        @Override
+        public int getCount() {
+            return mUrls.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+
+            final ImageView image = new ImageView(mContext);
+            image.setLayoutParams(new GridView.LayoutParams(300, 300));
+            mPresenter.loadImage(mUrls.get(position).getStrUrl(),
+                    new UiContract.UiLoadImageCallBack() {
+                @Override
+                public void onLoaded(Bitmap bitmap) {
+                    image.setImageBitmap(bitmap);
+                }
+            });
+
+            return image;
+
+        }
     }
 }

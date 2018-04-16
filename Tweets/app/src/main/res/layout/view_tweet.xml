@@ -50,13 +50,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name" />
 
-        <GridLayout
+        <GridView
             android:id="@+id/images"
             app:layout_constraintTop_toBottomOf="@id/content"
             android:layout_width="match_parent"
+            android:numColumns="3"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:columnWidth="60dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:background="#ffffff"
             android:layout_height="wrap_content">
 
-        </GridLayout>
+        </GridView>
 
         <LinearLayout
             android:id="@+id/comments"
