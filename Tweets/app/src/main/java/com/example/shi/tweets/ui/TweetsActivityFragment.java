@@ -1,12 +1,15 @@
 package com.example.shi.tweets.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -94,10 +97,18 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
         TextView content = (TextView) view.findViewById(R.id.content);
         content.setText(tweet.getContent());
 
+        final String url = tweet.getSenderAvatar();
+        final ImageView avatarImage = (ImageView) view.findViewById(R.id.avator);
+        mPresenter.loadImage(url, new UiContract.UiLoadImageCallBack() {
+            @Override
+            public void onLoaded(Bitmap bitmap) {
+                avatarImage.setImageBitmap(bitmap);
+
+            }
+        });
+
         LinearLayout commentsContainer = (LinearLayout) view.findViewById(R.id.comments);
-
         ArrayList<Comment> comments = tweet.getComments();
-
         if(comments != null &&  comments.size() > 0) {
             for (Comment comment : tweet.getComments()) {
                 TextView commentView = new TextView(mContext);

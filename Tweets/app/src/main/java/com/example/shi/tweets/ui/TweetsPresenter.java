@@ -67,4 +67,24 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
     public void loadNextScreen() {
 
     }
+
+    @Override
+    public void loadImage(String url, final UiContract.UiLoadImageCallBack callBack) {
+
+        mUseCaseHandler.execute(mLoadImageUserCase, new LoadImage.LoadImageRequest(url),
+                new UseCase.UseCaseCallback<LoadImage.LoadImageResponse>() {
+            @Override
+            public void onSuccess(LoadImage.LoadImageResponse response) {
+
+                callBack.onLoaded(response.getBitmap());
+
+            }
+
+            @Override
+            public void onError(String errorMsg) {
+                mView.showErrorMsg(errorMsg);
+
+            }
+        });
+    }
 }

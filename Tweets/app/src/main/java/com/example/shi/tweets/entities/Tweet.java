@@ -52,6 +52,10 @@ public class Tweet {
         return mImagesUrl;
     }
 
+    public String getSenderAvatar(){
+        return mSender.getAvatar();
+    }
+
     @Override
     public String toString(){
         StringBuffer stringBuffer = new StringBuffer();

@@ -1,5 +1,7 @@
 package com.example.shi.tweets.ui;
 
+import android.graphics.Bitmap;
+
 import com.example.shi.tweets.entities.Tweet;
 
 import java.util.ArrayList;
@@ -20,5 +22,10 @@ public interface UiContract {
 
         public void loadAllTweets();
         public void loadNextScreen();
+        public void loadImage(String url, UiLoadImageCallBack callBack);
+    }
+
+    interface UiLoadImageCallBack {
+        public void onLoaded(Bitmap bitmap);
     }
 }

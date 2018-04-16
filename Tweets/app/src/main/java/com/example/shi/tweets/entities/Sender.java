@@ -27,6 +27,10 @@ public class Sender {
         return mName;
     }
 
+    public String getAvatar(){
+        return mAvatar;
+    }
+
     @Override
     public String toString(){
         StringBuffer stringBuffer = new StringBuffer();
