@@ -16,11 +16,16 @@ import java.util.ArrayList;
 
 public class TweetsPresenter implements UiContract.ItweetsPresenter {
 
+    private final int SCREEN_DISPLAY_COUNT = 5;
+
     private UseCaseHandler mUseCaseHandler;
     private TweetsRepository mRepository;
     private GetTweets mGetTweetsUseCase;
     private LoadImage mLoadImageUserCase;
     private UiContract.ItweetsView mView;
+
+    private ArrayList<Tweet> mTweets;
+    private int mDisplayCount = 0;
 
     public TweetsPresenter(UseCaseHandler handler, TweetsRepository repository,
                            GetTweets getTweets, LoadImage loadImage, UiContract.ItweetsView view){
@@ -50,7 +55,14 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
                 ArrayList<Tweet> filtedTweets =
                         FilterFactory.getFilter(
                                 FilterFactory.VALIDE_TWEETS_FILTER).filter(response.getResponse());
-                mView.updataTweets(filtedTweets);
+                mTweets = filtedTweets;
+
+                ArrayList<Tweet> displayTweets = getDisplayTweets(mTweets);
+                if(displayTweets != null){
+                    mView.updataTweets(displayTweets);
+                }else{
+                    mView.showErrorMsg("The end of Tweets!");
+                }
             }
 
             @Override
@@ -61,6 +73,21 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
 
         });
 
+    }
+
+    private ArrayList<Tweet> getDisplayTweets(ArrayList<Tweet> tweets){
+        int begin = mDisplayCount * SCREEN_DISPLAY_COUNT;
+
+        if(begin < tweets.size() - 1){
+            ArrayList<Tweet> displayTweets = new ArrayList<>();
+            int index = begin;
+            while(index < Math.min(begin + SCREEN_DISPLAY_COUNT, tweets.size()) ){
+                displayTweets.add(tweets.get(index));
+                index++;
+            }
+            return displayTweets;
+        }
+        return null;
     }
 
     @Override
