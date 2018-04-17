@@ -18,7 +18,6 @@ import com.example.shi.tweets.entities.ImageUrl;
 import com.example.shi.tweets.entities.Tweet;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by shi on 2018/4/17.

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,13 @@ import com.example.shi.tweets.R;
 import com.example.shi.tweets.entities.Comment;
 import com.example.shi.tweets.entities.ImageUrl;
 import com.example.shi.tweets.entities.Tweet;
+import com.scwang.smartrefresh.header.MaterialHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 
@@ -33,15 +41,12 @@ import java.util.ArrayList;
  */
 public class TweetsActivityFragment extends Fragment implements UiContract.ItweetsView{
 
+    private final String TAG = TweetsActivityFragment.class.getName();
+
     private UiContract.ItweetsPresenter mPresenter;
-
     private TextView mEmptyView;
-
-    private SwipeRefreshLayout mSwipeView;
+    private SmartRefreshLayout mSwipeView;
     private ListView mTweetsContainer;
-    private TextView mDisplayMore;
-    private LayoutInflater mInflater;
-
     private Context mContext;
 
     public TweetsActivityFragment() {
@@ -51,16 +56,27 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tweets, container, false);
-        mInflater = inflater;
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
         mTweetsContainer = (ListView) rootView.findViewById(R.id.tweet_container);
-        mDisplayMore = (TextView) rootView.findViewById(R.id.display_more);
-        mSwipeView = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_view);
-        mSwipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+        mSwipeView = (SmartRefreshLayout) rootView.findViewById(R.id.swipe_view);
+        mSwipeView.setRefreshHeader(new MaterialHeader(mContext).setShowBezierWave(true));
+        mSwipeView.setRefreshFooter(new BallPulseFooter(mContext).setSpinnerStyle(SpinnerStyle.Scale));
+        mSwipeView.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(RefreshLayout refreshlayout) {
+                Log.d(TAG, "on refresh! ");
                 mPresenter.loadAllTweets();
-                mSwipeView.setRefreshing(false);
+                mSwipeView.finishRefresh(2000);
+            }
+        });
+
+        mSwipeView.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                Log.d(TAG, "on load more! ");
+                mPresenter.loadNextScreen();
+                mSwipeView.finishLoadmore(2000);
             }
         });
 

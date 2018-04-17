@@ -47,6 +47,8 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
     @Override
     public void loadAllTweets() {
 
+        mDisplayCount = 0;
+
         GetTweets.GetTweetsRequest request = new GetTweets.GetTweetsRequest();
         request.setUserName("jsmith");
         mUseCaseHandler.execute(mGetTweetsUseCase, request, new UseCase.UseCaseCallback<GetTweets.GetTweetsResponse>() {
@@ -77,17 +79,16 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
 
     private ArrayList<Tweet> getDisplayTweets(ArrayList<Tweet> tweets){
         int begin = mDisplayCount * SCREEN_DISPLAY_COUNT;
-
+        ArrayList<Tweet> displayTweets = new ArrayList<>();
         if(begin < tweets.size() - 1){
-            ArrayList<Tweet> displayTweets = new ArrayList<>();
+
             int index = begin;
             while(index < Math.min(begin + SCREEN_DISPLAY_COUNT, tweets.size()) ){
                 displayTweets.add(tweets.get(index));
                 index++;
             }
-            return displayTweets;
         }
-        return null;
+        return displayTweets;
     }
 
     @Override
