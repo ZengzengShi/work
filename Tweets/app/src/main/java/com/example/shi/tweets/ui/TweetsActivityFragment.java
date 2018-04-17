@@ -16,8 +16,10 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shi.tweets.R;
 import com.example.shi.tweets.entities.Comment;
@@ -36,7 +38,8 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
     private TextView mEmptyView;
 
     private SwipeRefreshLayout mSwipeView;
-    private LinearLayout mTweetsContainer;
+    private ListView mTweetsContainer;
+    private TextView mDisplayMore;
     private LayoutInflater mInflater;
 
     private Context mContext;
@@ -50,7 +53,8 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
         View rootView = inflater.inflate(R.layout.fragment_tweets, container, false);
         mInflater = inflater;
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
-        mTweetsContainer = (LinearLayout) rootView.findViewById(R.id.tweet_container);
+        mTweetsContainer = (ListView) rootView.findViewById(R.id.tweet_container);
+        mDisplayMore = (TextView) rootView.findViewById(R.id.display_more);
         mSwipeView = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_view);
         mSwipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -95,98 +99,19 @@ public class TweetsActivityFragment extends Fragment implements UiContract.Itwee
 
     @Override
     public void showErrorMsg(String errorMsg) {
-
+        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT);
     }
 
     void showTweets(ArrayList<Tweet> tweets){
-        mTweetsContainer.removeAllViews();
-        for(Tweet tweet: tweets){
-            mTweetsContainer.addView(bindView(tweet));
+
+        if (mTweetsContainer.getAdapter() == null){
+            mTweetsContainer.setAdapter(new TweetsListAdapter(mContext,mPresenter, tweets));
+        }else{
+            TweetsListAdapter adpter = (TweetsListAdapter) mTweetsContainer.getAdapter();
+            adpter.setDate(tweets);
+            adpter.notifyDataSetChanged();
         }
+
     }
 
-    private ConstraintLayout bindView(Tweet tweet){
-        ConstraintLayout view;
-        view = (ConstraintLayout) mInflater.inflate(R.layout.view_tweet, null, false);
-        TextView name = (TextView) view.findViewById(R.id.name);
-        name.setText(tweet.getSenderName());
-
-        if(tweet.getImagesUrl() != null) {
-            GridView imagesView = (GridView) view.findViewById(R.id.images);
-            imagesView.setAdapter(new ImageAdapter(getContext(), tweet.getImagesUrl()));
-        }
-
-        TextView content = (TextView) view.findViewById(R.id.content);
-        content.setText(tweet.getContent());
-
-        final String url = tweet.getSenderAvatar();
-        final ImageView avatarImage = (ImageView) view.findViewById(R.id.avator);
-        mPresenter.loadImage(url, new UiContract.UiLoadImageCallBack() {
-            @Override
-            public void onLoaded(Bitmap bitmap) {
-                avatarImage.setImageBitmap(bitmap);
-
-            }
-        });
-
-        LinearLayout commentsContainer = (LinearLayout) view.findViewById(R.id.comments);
-        ArrayList<Comment> comments = tweet.getComments();
-        if(comments != null &&  comments.size() > 0) {
-            for (Comment comment : tweet.getComments()) {
-                TextView commentView = new TextView(mContext);
-                StringBuffer strBuf = new StringBuffer(comment.getSenderName());
-                strBuf.append(" : ");
-                strBuf.append(comment.getContent());
-
-                commentView.setText(strBuf.toString());
-                commentsContainer.addView(commentView);
-            }
-        }
-        return view;
-    }
-
-    class ImageAdapter extends BaseAdapter{
-
-        private Context mContext;
-        private ArrayList<ImageUrl> mUrls;
-
-        public ImageAdapter(Context context, ArrayList<ImageUrl> urls){
-            super();
-            mContext = context;
-            mUrls = urls;
-        }
-
-        @Override
-        public int getCount() {
-            return mUrls.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-
-            final ImageView image = new ImageView(mContext);
-            image.setLayoutParams(new GridView.LayoutParams(300, 300));
-            mPresenter.loadImage(mUrls.get(position).getStrUrl(),
-                    new UiContract.UiLoadImageCallBack() {
-                @Override
-                public void onLoaded(Bitmap bitmap) {
-                    image.setImageBitmap(bitmap);
-                }
-            });
-
-            return image;
-
-        }
-    }
 }

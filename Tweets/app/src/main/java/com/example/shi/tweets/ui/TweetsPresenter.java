@@ -93,6 +93,14 @@ public class TweetsPresenter implements UiContract.ItweetsPresenter {
     @Override
     public void loadNextScreen() {
 
+        mDisplayCount++;
+        ArrayList<Tweet> displayTweets = getDisplayTweets(mTweets);
+        if(displayTweets != null){
+            mView.updataTweets(displayTweets);
+        }else{
+            mView.showErrorMsg("The end of Tweets!");
+        }
+
     }
 
     @Override

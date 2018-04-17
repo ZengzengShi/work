@@ -10,27 +10,44 @@
     tools:context="com.example.shi.tweets.ui.TweetsActivityFragment"
     tools:showIn="@layout/activity_tweets">
 
-    <ScrollView
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/tweet_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/tweet_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+            </ListView>
 
             <TextView
-                android:id="@+id/empty_view"
-                android:layout_width="wrap_content"
+                android:id="@+id/display_more"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/no_tweets"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:text="@string/display_more"
+                android:visibility="gone"/>
+
         </LinearLayout>
-    </ScrollView>
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_tweets"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </FrameLayout>
+
 
 </android.support.v4.widget.SwipeRefreshLayout>
